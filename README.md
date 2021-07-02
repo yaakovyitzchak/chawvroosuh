@@ -16,6 +16,6 @@ you can start recording a video, and a JavaScript file that records the time of 
 
 To start recording:
 
-after opening the HTML file press Alt + `    
+after opening the HTML file press Alt + ` [the key to the left of the "1" on the keyboard],
 
-` is the key to the left of the "1" on the keyboard, then press Alt + ` again to stop recording and download the video and JS file
+then press Alt + ` again to stop recording and download the video and JS file
