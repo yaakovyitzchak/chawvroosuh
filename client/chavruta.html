@@ -1,0 +1,470 @@
+<html>
+<head>
+    <style>
+	.hidden {
+		display:none
+	}
+    .content {
+        width:50%;
+        margin:0 auto;
+        #margin-top:200px;
+    }
+
+    .selectable {
+        cursor:pointer;
+    }
+	
+	#sideL .titlething {
+		margin-bottom:-5px;
+		margin-top:3px;
+	}
+	
+	#sideL button {
+		font-size:1%;
+	}
+	
+	#sideL {
+		position: fixed;
+		left:6;
+		top:25px;
+		width: 25%;
+		font-size:1%;
+	}
+	
+    #maamer_content {
+        user-select:none;
+    }
+
+    #maamer_content span {
+        padding:3px;
+        display:inline-block;
+        box-decoration-break:clone;
+        box-sizing:border-box;
+    }
+
+     #maamer_content span.selected {
+        box-shadow: 0 4px 2px -2px black,
+			0px 0px 2px 2px #808000;
+       
+    }
+
+    #maamer_content .selectable:hover {
+        background:yellow;
+        box-shadow: 3px 0 0 yellow, -3px 0 0 yellow;
+    }
+
+ 
+    #word_edit {
+        position:absolute;
+        #max-width:300px;
+        border:1px #0F23D5 solid;
+        padding:4px;
+        background:#A1C9E4;
+        border-radius:15px;
+        padding:15px;
+    }
+	
+    
+
+    #word_edit button {
+        float:right; 
+    }
+
+    #word_edit:after, #word_edit:before {
+        content:'';
+        position:absolute;
+        top:100%;
+        left:50%;
+        width:0;
+        height:0;
+        
+    }
+    input, .new_input {
+      
+        border:0;
+        outline:0;
+        background:transparent;
+        border-bottom:1px solid black;
+       
+    }
+    [contenteditable=true] {
+        cursor:text;
+        min-width:20px;
+        display:inline-block;
+    }
+
+    [contenteditable=true]:empty:before {
+        border:0;
+        outline:0;
+        background:transparent;
+        border-bottom:1px solid black;
+        content:attr(placeholder);
+        color:gray;
+    }
+   
+    .t2itlething {
+        display:inline-block;
+       text-align:right;
+       width:80px;
+	   margin-left:-20px;
+        
+    }
+
+    #word_edit:after {
+        z-index:20;
+        border-top:15px solid #A1C9E4;
+        border-right:15px solid transparent;
+        border-bottom:20px solid transparent;
+        border-left:15px solid transparent;
+        margin-left:-15px;
+    }
+
+    #word_edit:before {
+        border-top:17px solid #0F23D5;
+        border-right:17px solid transparent;
+        border-bottom:17px solid transparent;
+        border-left:17px solid transparent;
+        margin-left:-17px;
+    }
+
+  
+    </style>
+<script src="cobSok.js"></script>
+<script>
+    function q(ph) {
+        return document.querySelectorAll(ph);
+    }
+    function insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+</script>
+<script>
+    var socket = io("ws://localhost:770");
+    var maamerTxt = '';
+    var shtikles = [];
+    var words = [];
+    var currentID=0;
+    var finishedLine = false;
+	var isedit = false
+    socket.on("maamer loaded", function(maamer) {
+        console.log('maamer');
+        maamerTxt = maamer;
+        maamerTxt = addSpansToText(maamerTxt);
+        maamer_content.innerHTML = maamerTxt;
+        makeClickable();
+    });
+	
+	socket.on("wordsLoaded", function(w) {
+		words = JSON.parse(w)
+		console.log("Got words!",words)
+	})
+    //test
+		function nextWord() {
+			if(currentID < shtikles.length) {
+				currentID++
+				var s = shtikles[currentID] 
+				if(
+					s &&
+					s.item &&
+					!s.item.classList.contains("selectable")
+				)
+					nextWord()
+				else {
+					var t  = document
+						.documentElement
+						.scrollTop,
+						h = window.innerHeight
+					var it = s.item
+					console.log(t,h,it.offsetTop,it.offsetHeight)
+					if(
+						it &&
+						it.offsetTop + 
+						it.offsetHeight > 
+						t
+					) {
+						document
+						.documentElement
+						.scrollTop += 
+						it.offsetHeight * 3
+					}
+					slekt(currentID)
+				}
+			}
+		}
+		
+		function lastWord() {
+			if(currentID > 0) {
+				currentID--
+				var s = shtikles[currentID] 
+				if(
+					s &&
+					s.item &&
+					!s.item.classList.contains("selectable")
+				)
+					lastWord()
+				else
+					slekt(currentID)
+			}
+		}
+		
+	
+	function slekt(idx) {
+		if(isRec) {
+			curTime = Date.now()
+			frames.push({
+				time: curTime - startTime,
+				id: idx,
+				hebrew: shtikles[idx].word
+			})
+		}
+		 q(".selected").forEach(function(z,i) {
+			z.className = "selectable";
+		});
+		
+		shtikles[idx].
+		item.className = "selected";
+		
+		shtikles[idx].selected = true; 
+		var oyd = shtikles[idx].id
+		curID = oyd
+		var w = words[oyd] || {
+		
+		}
+		meaning.innerHTML = w.meaning || ""
+		sounding.innerHTML = w.sounding || ""
+		other.innerHTML = w.other || ""
+		if(isedit) updateEditbox(oyd);
+		
+        shtikles[idx].word.className = "selected";  
+	}
+	
+	var curID = 0
+    socket.on("selected", function(idx) {
+		slekt(idx)
+        
+    });
+
+    socket.on("word added", function(wordObj) {
+       words[wordObj.idx] = wordObj.word;
+       console.log("savbed!", wordObj);
+    });
+
+    function makeClickable() {
+        var spans = q("#maamer_content span");
+        spans.forEach(function(item, idx) {
+            shtikles[idx] = {id:idx, word:item.innerHTML, selected:false, item:item};
+            if(item.hasAttribute("data-word")) {
+                item.addEventListener("click", function(e) {
+                 
+                   
+                    currentID = idx;
+					
+                    slekt(idx)
+                    
+            //        updateEditbox(idx);
+             //       socket.emit("word clicked", idx);
+                });
+            }
+        });
+        socket.emit("word list", shtikles);
+    }
+    function updateSelection() {
+        for(var i in shtikles) {
+            if(shtikles[i]) {
+                if(shtikles[i].selected) {
+                    shtikles[i].item.className = "selected";
+                } else {
+                    shtikles[i].item.className = "selectable";
+                }
+            }
+        }
+    }
+
+    function updateEditbox(idx) {
+        showElement(word_edit);
+		updateLast()
+        var x = shtikles[idx].item.offsetLeft,
+        y = shtikles[idx].item.offsetTop,
+        height = word_edit.offsetHeight,
+        width = word_edit.offsetWidth,
+		
+        wordWidth=shtikles[idx].item.offsetWidth;
+		
+        x -= width/2; 
+        x += wordWidth/2;
+        y -= (height + 17);
+        elementToPosition(word_edit,x,y);
+   //     current_word.innerHTML = shtikles[idx].word;
+    }
+
+    function elementToPosition(el,x,y) {
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+    }
+
+    function addSpansToText(txt) {
+        return txt.split(' ').map((z, i) => {
+            return (z.replace(new RegExp("([\u0590-\u05FF\"]+)|([^\u0590-\u05FF\"]+)","g"), (t) => {
+                return /[\u0590-\u05FF\"]+/.test(t) ? `<span data-id="${i}" class="selectable" data-word="${t}">${t}</span>` : `<span data-id="${i}">${t}</span>`;
+            }))
+        }).join(' ');
+    }
+	var meaning, sounding, other,
+		lastDemz = {}
+	
+	function updateLast() {
+		lastDemz.w = word_edit.offsetWidth
+		lastDemz.h = word_edit.offsetHeight
+	}
+	onload = () => {
+		updateLast()
+	
+		meaning = q("[data-name='meaning'")[0];
+        sounding = q("[data-name='phonetic'")[0];
+        other = q("[data-name='other'")[0];
+		
+		/*other.onkeypress = 
+		sounding.onkeypress = 
+		meaning.onkeypress = 
+		other.onkeyup = 
+		sounding.onkeyup = 
+		meaning.onkeyup = 
+		other.onkeydown = 
+		sounding.onkeydown = 
+		meaning.onkeydown = () => {
+			if(lastDemz.w != word_edit.offsetWidth) {
+				updateEditbox(curID)
+			}
+		}*/
+		word_edit.onresize = () => {
+			console.log(2)
+			//updateEditbox(curID)
+		}
+	}
+    function saveWord() {
+        
+        var word = {};
+   
+        word.meaning = meaning.innerHTML;
+        word.sounding = sounding.innerHTML;
+        word.other = other.innerHTML;
+		word.hebrew = shtikles[currentID].word;
+		socket.emit("new word", 
+		{id:currentID, word:word});
+		console.log(word)
+        /*hideElement(word_edit);
+        meaning.innerHTML = sounding.innerHTML = other.innerHTML = "";*/
+    }
+	var backKey = 87,
+		forwardKy = 81
+	onkeyup = e => {
+		if(e.altKey) {
+			
+			e.preventDefault()
+			var c = e.keyCode
+			if(c == 192) {
+				startRec()
+			}
+			if(c == backKey) {
+				lastWord()
+			}
+			if(c == forwardKy) {
+				nextWord()
+			}
+			return false;
+		}
+	}
+	
+	var isRec
+	var frames = []
+	var startTime = 0
+	var curTime = 0
+	var lastTime = 0
+	var mr
+	function startRec() {
+		if(!isRec) {
+			
+			lastTime = startTime
+			navigator.mediaDevices
+			.getDisplayMedia({
+				video: 1
+			}).then(dsp => {
+				navigator.mediaDevices
+				.getUserMedia({
+					audio: 1
+				}).then(ad => {
+					isRec = true
+					startTime = Date.now()
+					curTime = startTime
+					console.log("STARTED")
+					
+					ad.addTrack(dsp.getVideoTracks()[0])
+					mr = new MediaRecorder(ad, {
+						mimeType: "video/webm; codecs=h264"
+					})
+					mr.ondataavailable = e=> {
+						console.log(e)	
+						var aa = document.createElement("a")
+						aa.href = URL.createObjectURL(e.data)
+						aa.download = "ok_"+Date.now()+".mp4"
+						aa.click()
+						aa.innerHTML = "Again!"
+						
+						
+						
+						aa.href = URL.createObjectURL(new Blob(
+						["B\"H("+JSON.stringify(
+							frames,4,4
+						)+");"]
+						))
+						
+						aa.download = "frames.js"
+						aa.click()
+						isRec = false
+					}
+					mr.start()
+				})
+			})
+		} else {
+			mr.stop()
+		}
+	}
+
+    function showElement(el) {
+        el.style.display = "";
+    }
+    function hideElement(el) {
+        el.style.display="none";
+    }
+    function checkHowManyThings(s,e) {
+        
+     
+    }
+</script>
+</head>
+<body>
+<div class="content">
+<div id="maamer_content" dir="rtl">
+    
+</div>
+</div>
+<div id="sideL">
+<div class="titlething">Meaning</div><br>
+<div class="new_input" placeholder="What does this word mean???" onkeyup="checkHowManyThings(this)" data-name="meaning" contenteditable="true"></div></br>
+</label>
+<label>
+<div class="titlething">Phonetic</div><br>
+<div class="new_input" placeholder="How does it sound???!" onkeyup="checkHowManyThings(this)" contenteditable="true" data-name="phonetic"></div></br>
+</label>
+<label>
+<div class="titlething">Other</div><br>
+<div class="new_input" placeholder="Anything else?!" onkeyup="checkHowManyThings(this)" contenteditable="true" data-name="other"></div></br>
+</label>
+<button data-name="done" onclick="saveWord()">Etzem</button>
+</div>
+<div id="word_edit" class="hidden">
+<label>
+
+</div>
+</body>
+</html>
