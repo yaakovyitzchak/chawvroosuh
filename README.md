@@ -19,3 +19,6 @@ To start recording:
 after opening the HTML file press Alt + ` [the key to the left of the "1" on the keyboard],
 
 then press Alt + ` again to stop recording and download the video and JS file
+
+
+First example video https://moshiach77d.blogspot.com/2021/07/youtube-video-player.html
