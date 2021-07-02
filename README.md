@@ -1,4 +1,9 @@
+#B"H
+
+
 # chwvroosuh
+
+
 Yo
 
 start the server with the script "node ok.js" after opening a command line in the server folder
