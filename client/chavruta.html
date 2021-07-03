@@ -481,6 +481,10 @@
 	
 	if(wordList) {
 		socket.forceEmit("wordsLoaded", wordList)
+		
+	}
+	
+	if(maweem || wordList) {
 		socket.fakeServer({
 			"new word": (w, srv) => {
 				
