@@ -21,18 +21,18 @@ after opening the HTML file press Alt + ` [the key to the left of the "1" on the
 then press Alt + ` again to stop recording and download the video and JS file
 
 
-First example video https://moshiach77d.blogspot.com/2021/07/youtube-video-player.html
+First example video [An End He Set for Darkness](https://moshiach77d.blogspot.com/2021/07/youtube-video-player.html)
 
 You can also use it without a server at all by using the #hash of the URL
 
-To begin, go to the encoder https://yaakovyitzchak.github.io/chawvroosuh/client/encoder.html
+To begin, go to the encoder [Encoder!](https://yaakovyitzchak.github.io/chawvroosuh/client/encoder.html)
 
-Enter in some values for the two lower input fields, then "make" the new hash and copy it
+Enter in some values for either the Maweemir itself, or both the two lower input fields, then "make" the new hash and copy it
 
-Now, open the main file https://yaakovyitzchak.github.io/chawvroosuh/client/chavruta.html and paste the hash to the end of the URL, and refresh the page
+Now, open the main file [Main Chavrusa file](https://yaakovyitzchak.github.io/chawvroosuh/client/chavruta.html) and paste the hash to the end of the URL, and refresh the page
 
-Now freely add new words etc. by clicking the "etzeM" button, then when you're done simply copy the URL back into the "encoder" page, in the first input "base URL", then click the button under it
+Now freely add new words etc. by clicking the "Etzem" button, then when you're done simply copy the URL back into the "encoder" page, in the first input "base URL", then click the button under it
 
 You can now modify the values manually, or copy them elsewhere, in the next two input fields
 
-You can also copy the base URL to the decoder, at https://yaakovyitzchak.github.io/chawvroosuh/client/decoder.html to get a raw JSON output for later use
+You can also copy the base URL to the decoder, at [Decoder](https://yaakovyitzchak.github.io/chawvroosuh/client/decoder.html) to get a raw JSON output for later use
