@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+B"H
+<head></head><body>
+<br>
+
+<input placeholder="enter base URL here [if u want]" id="rr"><br>
+<button id="ra">preload from baseURL</button><br>
+<br>
+<textarea placeholder="enter maweemir here" id="k"></textarea><br>
+<textarea placeholder="enter word list here" id="kk"></textarea><br>
+<button id="cl">Click to make it</button><br>
+<span>click text to select it and automatically copy</span>
+<span id="cop"></span>
+<br><div id="out"></div>
+<style>
+
+
+
+#out {
+	padding: 7px; 
+	margin-top:5px;
+	box-shadow: 0px 0px 5px 3px black;
+	overflow-x:scroll;
+}
+
+#out:hover {
+	background:green;
+	color:white;
+	cursor:pointer
+}
+
+
+</style>
+<script src="cobSok.js"></script>
+<script>
+ra.onclick = e => {
+	var tst;
+	try {
+		tst = new URL(rr.value)
+	} catch(e){}
+	var has 
+	if(tst) {
+		has = unhashify(tst.hash)
+		if(has.maweemir)
+			k.value = has.maweemir
+			
+		if(has.dvareem)
+			kk.value = has.dvareem
+	}
+}
+
+cl.onclick = e => {
+	okn()
+}
+onkeyup = e=> {
+	e.keyCode == "13" ? okn() : 0
+}
+function okn() {
+	cop.innerHTML = ""
+	out.innerText = hashify(k.value, tryStrang(tryPrsOrIt(kk.value)),rr.value)
+			
+}
+
+
+
+out.onclick = e => {
+	selectText("out")
+	document.execCommand('copy');
+	cop.innerHTML = " COPIED?!"
+}
+
+function selectText(containerid) {
+    if (document.selection) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(document.getElementById(containerid));
+        range.select();
+    } else if (window.getSelection) {
+        var range = document.createRange();
+        range.selectNode(document.getElementById(containerid));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+    }
+}
+
+
+</script>
+</body>
+</html>

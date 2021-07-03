@@ -20,7 +20,7 @@
 	}
 	
 	#sideL button {
-		font-size:1%;
+		font-size:2em;
 	}
 	
 	#sideL {
@@ -28,10 +28,11 @@
 		left:6;
 		top:25px;
 		width: 25%;
-		font-size:1%;
+		font-size: 1em;
 	}
 	
     #maamer_content {
+		font-size:2em;
         user-select:none;
     }
 
@@ -129,6 +130,30 @@
 
   
     </style>
+</head>
+<body>
+<div class="content">
+<div id="maamer_content" dir="rtl"></div>
+</div>
+<div id="sideL">
+<div class="titlething">Meaning</div><br>
+<div class="new_input" placeholder="What does this word mean???" onkeyup="checkHowManyThings(this)" data-name="meaning" contenteditable="true"></div></br>
+</label>
+<label>
+<div class="titlething">Phonetic</div><br>
+<div class="new_input" placeholder="How does it sound???!" onkeyup="checkHowManyThings(this)" contenteditable="true" data-name="phonetic"></div></br>
+</label>
+<label>
+<div class="titlething">Other</div><br>
+<div class="new_input" placeholder="Anything else?!" onkeyup="checkHowManyThings(this)" contenteditable="true" data-name="other"></div></br>
+</label>
+<button data-name="done" onclick="saveWord()">Etzem</button>
+</div>
+<div id="word_edit" class="hidden">
+<label>
+
+</div>
+
 <script src="cobSok.js"></script>
 <script>
     function q(ph) {
@@ -155,8 +180,12 @@
     });
 	
 	socket.on("wordsLoaded", function(w) {
-		words = JSON.parse(w)
-		console.log("Got words!",words)
+		var pr = tryPrs(w)
+		if(pr && pr.constructor.name == "Array") {
+			
+			words = pr
+			console.log("Got words!",words)
+		} else console.log("NOYP",w,pr)
 	})
     //test
 		function nextWord() {
@@ -440,31 +469,51 @@
         
      
     }
-</script>
-</head>
-<body>
-<div class="content">
-<div id="maamer_content" dir="rtl">
-    
-</div>
-</div>
-<div id="sideL">
-<div class="titlething">Meaning</div><br>
-<div class="new_input" placeholder="What does this word mean???" onkeyup="checkHowManyThings(this)" data-name="meaning" contenteditable="true"></div></br>
-</label>
-<label>
-<div class="titlething">Phonetic</div><br>
-<div class="new_input" placeholder="How does it sound???!" onkeyup="checkHowManyThings(this)" contenteditable="true" data-name="phonetic"></div></br>
-</label>
-<label>
-<div class="titlething">Other</div><br>
-<div class="new_input" placeholder="Anything else?!" onkeyup="checkHowManyThings(this)" contenteditable="true" data-name="other"></div></br>
-</label>
-<button data-name="done" onclick="saveWord()">Etzem</button>
-</div>
-<div id="word_edit" class="hidden">
-<label>
+	
+	var parts = unhashify(location.hash)
+		
+	var maweem = (parts.maweemir)
+	
+	var wordList = (parts.dvareem)
+	if(maweem) {
+		socket.forceEmit("maamer loaded", maweem)
+	}
+	
+	if(wordList) {
+		socket.forceEmit("wordsLoaded", wordList)
+		socket.fakeServer({
+			"new word": (w, srv) => {
+				
+				
+				var id = w.id
+				if(typeof(id) == "number") {
+					var curWord = w.word;
+					var curID = id
+					setInterval(function() {
+						
+						words[curID] = curWord
+						wordList = words
+						var wrs = tryStrang(words)
+						if(wrs) {
+							location.hash = hashify(
+								maweem, wrs
+							)
+							srv.forceEmit(
+								"finishedSaving", 
+								{idx:curID,word:curWord}
+							)
+						}
+						
+					}, 0)
+					srv.forceEmit("word added", {idx:curID,word:curWord})
+				}
+			}
+		})
+	}
+	
 
-</div>
+	
+</script>
+
 </body>
 </html>

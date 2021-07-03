@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+B"H
+<head></head><body>
+<br>
+<input placeholder="enter hash or URL here" id="k"><br>
+<button id="cl">Click to make it</button><br>
+<button id="sl">click here to select it and automatically copy</button><br>
+<span id="cop"></span>
+<br><div id="out"></div>
+<style>
+
+
+
+#out {
+	padding: 7px; 
+	margin-top:5px;
+	box-shadow: 0px 0px 5px 3px black;
+	overflow-x:scroll;
+}
+
+
+
+</style>
+<script src="cobSok.js"></script>
+<script>
+cl.onclick = e => {
+	okn()
+}
+onkeyup = e=> {
+	e.keyCode == "13" ? okn() : 0
+}
+function okn() {
+	cop.innerHTML = ""
+	
+	out.innerText = JSON.stringify(unURLify(
+		k.value
+	))
+			
+}
+
+
+
+sl.onclick = e => {
+	selectText("out")
+	document.execCommand('copy');
+	cop.innerHTML = " COPIED?!"
+}
+
+function selectText(containerid) {
+    if (document.selection) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(document.getElementById(containerid));
+        range.select();
+    } else if (window.getSelection) {
+        var range = document.createRange();
+        range.selectNode(document.getElementById(containerid));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+    }
+}
+
+
+</script>
+</body>
+</html>
