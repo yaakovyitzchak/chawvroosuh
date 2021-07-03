@@ -5,35 +5,30 @@ B"H
 <br>
 
 <input placeholder="enter base URL here [if u want]" id="rr"><br>
-<button id="ra">preload from baseURL</button><br>
+<button id="ra">preload from baseURL or hash</button><br>
+<button id="cra">clear baseURL</button>
+<button id="crra">clear all</button>
+<br>
 <br>
 <textarea placeholder="enter maweemir here" id="k"></textarea><br>
 <textarea placeholder="enter word list here" id="kk"></textarea><br>
-<button id="cl">Click to make it</button><br>
+<button id="cl">Click to make it</button>
+<br>
 <span>click text to select it and automatically copy</span>
 <span id="cop"></span>
 <br><div id="out"></div>
-<style>
 
-
-
-#out {
-	padding: 7px; 
-	margin-top:5px;
-	box-shadow: 0px 0px 5px 3px black;
-	overflow-x:scroll;
-}
-
-#out:hover {
-	background:green;
-	color:white;
-	cursor:pointer
-}
-
-
-</style>
 <script src="cobSok.js"></script>
 <script>
+crra.onclick = () => {
+	rr.value = ""
+	k.value=""
+	kk.value=""
+}
+cra.onclick = () => {
+	rr.value = ""
+}
+
 ra.onclick = e => {
 	var tst;
 	try {
@@ -41,12 +36,21 @@ ra.onclick = e => {
 	} catch(e){}
 	var has 
 	if(tst) {
-		has = unhashify(tst.hash)
-		if(has.maweemir)
-			k.value = has.maweemir
+		has = tst.hash
+	} else if(rr.value[0] == "#") {
+		has = rr.value
+	}
+	
+	if(has) {
+		var hast = unhashify(has)
+		if(hast.maweemir)
+			k.value = hast.maweemir
 			
-		if(has.dvareem)
-			kk.value = has.dvareem
+		if(hast.dvareem)
+			kk.value = hast.dvareem
+		
+	} else {
+		alert("no base URL or hash")
 	}
 }
 
@@ -85,5 +89,24 @@ function selectText(containerid) {
 
 
 </script>
+<style>
+
+
+
+#out {
+	padding: 7px; 
+	margin-top:5px;
+	box-shadow: 0px 0px 5px 3px black;
+	overflow-x:scroll;
+}
+
+#out:hover {
+	background:green;
+	color:white;
+	cursor:pointer
+}
+
+
+</style>
 </body>
 </html>
