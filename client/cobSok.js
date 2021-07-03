@@ -93,7 +93,7 @@ function unhashify(loyk) {
 }
 
 function unURLify(o) {
-	unhashify(
+	return unhashify(
 		o[0] == "#" ? k.value : 
 		(url => (url ? url.hash : "{}"))(tryIn(() => new URL(o)))
 	)
