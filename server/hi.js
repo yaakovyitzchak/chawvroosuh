@@ -99,14 +99,5 @@ coby.adanServer({
 			//a:2
 			uid: cs.uid
 		});
-	}/*,
-	database: {
-		//url: "mongodb://localhost:27017",
-		url: "mongodb://asdf:fdsa@cluster0-shard-00-00.secyp.mongodb.net:27017,cluster0-shard-00-01.secyp.mongodb.net:27017,cluster0-shard-00-02.secyp.mongodb.net:27017/atzmus?ssl=true&replicaSet=atlas-i7f2xi-shard-0&authSource=admin&retryWrites=true&w=majority",
-		admin: {
-			username: "hi",
-			password: "bye"
-		},
-		databaseCommand: "well"
-	}*/
+	}
 })
