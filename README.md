@@ -37,4 +37,4 @@ You can now modify the values manually, or copy them elsewhere, in the next two 
 
 You can also copy the base URL to the [Decoder](https://yaakovyitzchak.github.io/chawvroosuh/client/decoder.html) to get a raw JSON output for later use
 
-In the "dayuh" folder there are some text file(s) with ready-made URLs, including the hash data, that can be copied in to the encoder or pasted into the browser directly to continue editing etc.
+In [the "dayuh" folder](https://github.com/yaakovyitzchak/chawvroosuh/tree/main/dayuh) there are some text file(s) with ready-made URLs, including the hash data, that can be copied in to the encoder or pasted into the browser directly to continue editing etc.
