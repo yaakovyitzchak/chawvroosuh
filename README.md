@@ -23,7 +23,7 @@ then press Alt + ` again to stop recording and download the video and JS file
 
 First example video [An End He Set for Darkness](https://moshiach77d.blogspot.com/2021/07/youtube-video-player.html)
 
-You can also use it without a server at all by using the #hash of the URL
+# You can also use it without a server at all by using the #hash of the URL
 
 To begin, go to the [Encoder](https://yaakovyitzchak.github.io/chawvroosuh/client/encoder.html)
 
